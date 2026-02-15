@@ -26,17 +26,24 @@ npm run dev
 
 | Variable | Description |
 |----------|-------------|
-| `PORT` | Server port (default: 3456) |
-| `WEBHOOK_SECRET` | Shared secret sent by CloudFront in `X-Webhook-Secret` header |
+| `PORT` | Server port (default: 443) |
+| `WEBHOOK_SECRET` | Shared secret sent by CloudFront/Cloudflare in `X-Webhook-Secret` header |
 | `GITHUB_WEBHOOK_SECRET` | GitHub HMAC secret for signature verification |
+| `TLS_CERT` | Path to TLS certificate file (PEM) |
+| `TLS_KEY` | Path to TLS private key file (PEM) |
+| `TLS_CA` | Optional: CA certificate (e.g. Cloudflare Origin CA root) |
 
-## CloudFront Configuration
+If `TLS_CERT` and `TLS_KEY` are set, the server starts with HTTPS. Otherwise plain HTTP.
 
-1. Create a CloudFront distribution for `tashi.namche.ai`
-2. Origin: your server IP/hostname, port 3456, HTTP only
-3. Add a custom origin header: `X-Webhook-Secret: <your-secret>`
-4. Cache policy: CachingDisabled
-5. Origin request policy: AllViewer
+## Cloudflare Configuration
+
+1. Add DNS record for `tashi.namche.ai` pointing to your server (proxied or DNS-only)
+2. SSL/TLS mode: Full (Strict)
+3. Create an Origin Certificate in Cloudflare dashboard (SSL/TLS → Origin Server)
+4. Install cert and key on the server, set `TLS_CERT` and `TLS_KEY`
+5. Optionally set `TLS_CA` to the Cloudflare Origin CA root for chain validation
+6. Add a custom request header in a Transform Rule: `X-Webhook-Secret: <your-secret>`
+7. Cache: bypass (Cache Rules or Page Rule with "Cache Level: Bypass")
 
 ## Adding a New Webhook Source
 
