@@ -86,15 +86,16 @@ function loadTls() {
 // ---------------------------------------------------------------------------
 
 const port = Number(process.env.PORT) || 443;
+const host = process.env.HOST || "0.0.0.0";
 const tls = loadTls();
 
 if (tls) {
   const server = createServer(tls, app.fetch as any);
-  server.listen(port, () => {
-    console.log(`webhook-relay listening on :${port} (TLS)`);
+  server.listen(port, host, () => {
+    console.log(`webhook-relay listening on ${host}:${port} (TLS)`);
   });
 } else {
-  serve({ fetch: app.fetch, port }, () => {
-    console.log(`webhook-relay listening on :${port} (plain HTTP)`);
+  serve({ fetch: app.fetch, port, hostname: host }, () => {
+    console.log(`webhook-relay listening on ${host}:${port} (plain HTTP)`);
   });
 }
