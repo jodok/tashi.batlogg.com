@@ -90,10 +90,12 @@ const host = process.env.HOST || "0.0.0.0";
 const tls = loadTls();
 
 if (tls) {
-  const server = createServer(tls, app.fetch as any);
-  server.listen(port, host, () => {
-    console.log(`webhook-relay listening on ${host}:${port} (TLS)`);
-  });
+  serve(
+    { fetch: app.fetch, port, hostname: host, createServer: createServer, serverOptions: tls },
+    () => {
+      console.log(`webhook-relay listening on ${host}:${port} (TLS)`);
+    }
+  );
 } else {
   serve({ fetch: app.fetch, port, hostname: host }, () => {
     console.log(`webhook-relay listening on ${host}:${port} (plain HTTP)`);

@@ -1,5 +1,6 @@
 import { Hono } from "hono";
 import { verifyGitHubSignature } from "../verify.js";
+import { notifyOpenClaw } from "../notify.js";
 
 const GITHUB_WEBHOOK_SECRET = process.env.GITHUB_WEBHOOK_SECRET ?? "";
 
@@ -33,8 +34,7 @@ githubWebhook.post("/", async (c) => {
       })
     );
 
-    // TODO: forward to OpenClaw via cron wake or sessions API
-    // await forwardToOpenClaw(message);
+    await notifyOpenClaw(message);
   }
 
   return c.json({ status: "ok" });
