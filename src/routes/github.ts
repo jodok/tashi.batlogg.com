@@ -23,7 +23,6 @@ githubWebhook.post("/", async (c) => {
   const message = formatEvent(event, payload);
 
   if (message) {
-    // Structured log — will be wired to OpenClaw later
     console.log(
       JSON.stringify({
         source: "github",
