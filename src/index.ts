@@ -87,8 +87,8 @@ function loadTls() {
 // Server
 // ---------------------------------------------------------------------------
 
-const port = Number(process.env.PORT) || 443;
-const host = process.env.HOST || "0.0.0.0";
+const port = Number(process.env.PORT) || 8443;
+const host = "0.0.0.0";
 const tls = loadTls();
 
 if (tls) {

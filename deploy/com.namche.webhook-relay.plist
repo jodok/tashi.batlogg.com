@@ -9,6 +9,7 @@
   <key>ProgramArguments</key>
   <array>
     <string>/opt/homebrew/bin/node</string>
+    <string>--env-file=/Users/tashi/sandbox/webhook-relay/.env</string>
     <string>/Users/tashi/sandbox/webhook-relay/dist/index.js</string>
   </array>
 
