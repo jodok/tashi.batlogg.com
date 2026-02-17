@@ -23,19 +23,19 @@ krispWebhook.post("/", async (c) => {
     return c.json({ error: "invalid JSON" }, 400);
   }
 
-  const message = formatKrispEvent(payload);
-
-  if (message) {
-    console.log(
-      JSON.stringify({
-        source: "krisp",
-        event: payload.event ?? "meeting_note",
-        timestamp: new Date().toISOString(),
-      })
-    );
-
-    await notifyOpenClaw(message);
+  // Temporary: log raw payload for unmapped event types
+  if ((payload.event as string) === "action_items_generated") {
+    console.log("[krisp] action_items raw:", JSON.stringify(payload).slice(0, 3000));
   }
+
+  // Log but don't forward to OpenClaw for now
+  console.log(
+    JSON.stringify({
+      source: "krisp",
+      event: payload.event ?? "meeting_note",
+      timestamp: new Date().toISOString(),
+    })
+  );
 
   return c.json({ status: "ok" });
 });

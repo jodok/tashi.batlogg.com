@@ -6,15 +6,16 @@ Receives webhooks from external services and forwards events to OpenClaw.
 
 ```
 External service (GitHub, HubSpot, ...)
-  → tashi.namche.ai (CloudFront, SSL termination)
-    → origin (VPS or dynamic IP with port forwarding)
-      → this service (default port 3456)
-        → OpenClaw (via wake event or sessions API)
+  → tashi.namche.ai (Cloudflare, SSL termination)
+    → Unifi router (443 → 8443)
+      → this service (port 8443)
+        → OpenClaw (via wake event)
 ```
 
 ## Setup
 
 ```bash
+git clone git@github.com:NamcheAI/webhook-relay.git
 cd webhook-relay
 npm install
 cp .env.example .env
@@ -26,14 +27,67 @@ npm run dev
 
 | Variable | Description |
 |----------|-------------|
-| `PORT` | Server port (default: 443) |
-| `WEBHOOK_SECRET` | Shared secret sent by CloudFront/Cloudflare in `X-Webhook-Secret` header |
+| `PORT` | Server port (default: 8443) |
+| `WEBHOOK_SECRET` | Shared secret sent by Cloudflare in `X-Webhook-Secret` header |
 | `GITHUB_WEBHOOK_SECRET` | GitHub HMAC secret for signature verification |
+| `KRISP_WEBHOOK_SECRET` | Krisp Bearer token for authorization |
+| `OPENCLAW_URL` | OpenClaw API URL (default: `http://127.0.0.1:18789`) |
+| `OPENCLAW_TOKEN` | OpenClaw API token |
 | `TLS_CERT` | Path to TLS certificate file (PEM) |
 | `TLS_KEY` | Path to TLS private key file (PEM) |
 | `TLS_CA` | Optional: CA certificate (e.g. Cloudflare Origin CA root) |
 
 If `TLS_CERT` and `TLS_KEY` are set, the server starts with HTTPS. Otherwise plain HTTP.
+
+## Production Deployment (macOS)
+
+Checkout location: `/Users/tashi/sandbox/webhook-relay`
+
+### Install
+
+```bash
+cd /Users/tashi/sandbox
+git clone git@github.com:NamcheAI/webhook-relay.git
+cd webhook-relay
+npm ci
+npm run build
+cp .env.example .env
+# Edit .env
+mkdir -p logs
+```
+
+### LaunchDaemon
+
+```bash
+sudo cp deploy/com.namche.webhook-relay.plist /Library/LaunchDaemons/
+sudo launchctl load /Library/LaunchDaemons/com.namche.webhook-relay.plist
+```
+
+Manage:
+
+```bash
+# Status
+sudo launchctl list | grep webhook-relay
+
+# Restart
+sudo launchctl kickstart -k system/com.namche.webhook-relay
+
+# Stop
+sudo launchctl unload /Library/LaunchDaemons/com.namche.webhook-relay.plist
+
+# Logs
+tail -f logs/stdout.log logs/stderr.log
+```
+
+### Deploy Updates
+
+```bash
+cd /Users/tashi/sandbox/webhook-relay
+git pull
+npm ci
+npm run build
+sudo launchctl kickstart -k system/com.namche.webhook-relay
+```
 
 ## Cloudflare Configuration
 
@@ -70,6 +124,10 @@ If `TLS_CERT` and `TLS_KEY` are set, the server starts with HTTPS. Otherwise pla
 | `pull_request` | opened, closed, merged | PR lifecycle |
 | `issue_comment` | created | Comments on issues/PRs |
 
+### Krisp
+
+Events are logged but not forwarded to OpenClaw (disabled for now).
+
 ### HubSpot
 
-Placeholder — not yet implemented.
+Placeholder -- not yet implemented.
