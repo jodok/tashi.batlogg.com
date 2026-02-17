@@ -1,6 +1,7 @@
 import { Hono } from "hono";
 import { verifyGitHubSignature } from "../verify.js";
 import { notifyOpenClaw } from "../notify.js";
+import { logEvent } from "../log.js";
 
 const GITHUB_WEBHOOK_SECRET = process.env.GITHUB_WEBHOOK_SECRET ?? "";
 
@@ -19,6 +20,8 @@ githubWebhook.post("/", async (c) => {
 
   const event = c.req.header("x-github-event") ?? "unknown";
   const payload = JSON.parse(body);
+
+  logEvent("github", `${event}.${payload.action ?? ""}`, payload);
 
   const message = formatEvent(event, payload);
 
