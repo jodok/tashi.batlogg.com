@@ -2,7 +2,6 @@ import { Hono } from "hono";
 import { mkdirSync, writeFileSync, existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { notifyOpenClaw } from "../notify.js";
-import { logEvent } from "../log.js";
 
 const KRISP_WEBHOOK_SECRET = process.env.KRISP_WEBHOOK_SECRET ?? "";
 const DATA_DIR = process.env.KRISP_DATA_DIR ?? "data/krisp";
@@ -30,8 +29,6 @@ krispWebhook.post("/", async (c) => {
   const event = (payload.event as string) ?? "unknown";
   const data = (payload.data ?? {}) as Record<string, unknown>;
   const meeting = (data.meeting ?? {}) as Record<string, unknown>;
-
-  logEvent("krisp", event, payload);
 
   console.log(
     JSON.stringify({
