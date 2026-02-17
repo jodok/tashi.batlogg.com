@@ -18,6 +18,7 @@ import { Hono } from "hono";
 import { logger } from "hono/logger";
 import { githubWebhook } from "./routes/github.js";
 import { hubspotWebhook } from "./routes/hubspot.js";
+import { krispWebhook } from "./routes/krisp.js";
 
 const app = new Hono();
 
@@ -48,6 +49,7 @@ app.get("/health", (c) => c.json({ status: "ok" }));
 
 app.route("/webhooks/github", githubWebhook);
 app.route("/webhooks/hubspot", hubspotWebhook);
+app.route("/webhooks/krisp", krispWebhook);
 
 // ---------------------------------------------------------------------------
 // TLS Configuration

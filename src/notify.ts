@@ -13,7 +13,7 @@ export async function notifyOpenClaw(message: string): Promise<void> {
   }
 
   try {
-    const res = await fetch(`${OPENCLAW_URL}/api/cron/wake`, {
+    const res = await fetch(`${OPENCLAW_URL}/hooks/wake`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
