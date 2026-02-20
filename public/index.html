@@ -465,14 +465,32 @@
 
     /* ---- RESPONSIVE ---- */
     @media (max-width: 640px) {
-      .hero h1 { font-size: 2.5rem; }
-      .hero .tagline { font-size: 1.1rem; }
-      h2 { font-size: 1.5rem; }
-      .principles-grid { grid-template-columns: 1fr; }
-      .cap-grid { grid-template-columns: 1fr; }
+      .container { padding: 0 16px; }
+      .hero h1 { font-size: 2rem; }
+      .hero .tagline { font-size: 1rem; }
+      .hero-avatar { width: 88px; height: 88px; margin-bottom: 24px; }
+      h2 { font-size: 1.35rem; }
+      h3 { font-size: 0.95rem; }
+      .principles-grid { grid-template-columns: 1fr; gap: 12px; }
+      .principle { padding: 16px; }
+      .cap-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+      .cap-card { padding: 16px 12px; }
+      .cap-card h3 { font-size: 0.8rem; }
+      .cap-card p { font-size: 0.75rem; }
+      .cap-icon { font-size: 1.25rem; margin-bottom: 8px; }
       .values-list li { flex-direction: column; gap: 4px; }
       .value-label { min-width: auto; }
-      section { padding: 60px 0; }
+      section { padding: 48px 0; }
+      .spec-row { padding: 10px 16px; flex-wrap: wrap; gap: 4px; }
+      .spec-label { font-size: 0.7rem; }
+      .spec-value { font-size: 0.85rem; }
+      .spec-tag { font-size: 0.65rem; padding: 1px 6px; }
+      .name-origin { padding: 16px; }
+      .human-card { padding: 20px; }
+      .human-card .name { font-size: 1.1rem; }
+      .human-links { flex-wrap: wrap; gap: 12px; }
+      .section-label { font-size: 0.7rem; margin-bottom: 16px; }
+      .tools-heading { margin-top: 28px; }
     }
 
     /* selection color */
