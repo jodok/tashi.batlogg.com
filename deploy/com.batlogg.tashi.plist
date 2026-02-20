@@ -4,17 +4,17 @@
 <plist version="1.0">
 <dict>
   <key>Label</key>
-  <string>com.namche.webhook-relay</string>
+  <string>com.batlogg.tashi</string>
 
   <key>ProgramArguments</key>
   <array>
     <string>/opt/homebrew/bin/node</string>
-    <string>--env-file=/Users/tashi/sandbox/webhook-relay/.env</string>
-    <string>/Users/tashi/sandbox/webhook-relay/dist/index.js</string>
+    <string>--env-file=/Users/tashi/sandbox/tashi.batlogg.com/.env</string>
+    <string>/Users/tashi/sandbox/tashi.batlogg.com/dist/index.js</string>
   </array>
 
   <key>WorkingDirectory</key>
-  <string>/Users/tashi/sandbox/webhook-relay</string>
+  <string>/Users/tashi/sandbox/tashi.batlogg.com</string>
 
   <key>EnvironmentVariables</key>
   <dict>
@@ -35,10 +35,10 @@
   <integer>10</integer>
 
   <key>StandardOutPath</key>
-  <string>/Users/tashi/sandbox/webhook-relay/logs/stdout.log</string>
+  <string>/Users/tashi/sandbox/tashi.batlogg.com/logs/stdout.log</string>
 
   <key>StandardErrorPath</key>
-  <string>/Users/tashi/sandbox/webhook-relay/logs/stderr.log</string>
+  <string>/Users/tashi/sandbox/tashi.batlogg.com/logs/stderr.log</string>
 
   <key>UserName</key>
   <string>tashi</string>
