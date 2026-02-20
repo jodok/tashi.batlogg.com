@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 445.0 445.0" width="445.0" height="445.0">
+  <rect width="445.0" height="445.0" fill="#1E3A8A" rx="100"/>
+  <g transform="translate(60, 60)">
+    
+    <!-- Cell (0,0): Quarter circle, center at top-right corner -->
+    <path d="M100.0,0.0 L0.0,0.0 A100,100 0 0 0 100.0,100.0 Z" fill="#FFFFFF"/>
+
+    <!-- Cell (1,0): Full square, crossbar center -->
+    <rect x="112.5" y="0.0" width="100" height="100" fill="#FFFFFF"/>
+
+    <!-- Cell (2,0): Quarter circle, center at top-left corner (mirror) -->
+    <path d="M225.0,0.0 L325.0,0.0 A100,100 0 0 1 225.0,100.0 Z" fill="#FFFFFF"/>
+
+    <!-- Cell (1,1): Full square, stem -->
+    <rect x="112.5" y="112.5" width="100" height="100" fill="#FFFFFF"/>
+
+    <!-- Cell (1,2): Full square, stem base -->
+    <rect x="112.5" y="225.0" width="100" height="100" fill="#FFFFFF"/>
+  </g>
+</svg>
