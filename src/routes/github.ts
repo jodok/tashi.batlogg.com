@@ -19,7 +19,20 @@ githubWebhook.post("/", async (c) => {
   }
 
   const event = c.req.header("x-github-event") ?? "unknown";
-  const payload = JSON.parse(body);
+
+  let payload: Record<string, unknown>;
+  try {
+    // GitHub can send as application/json or application/x-www-form-urlencoded
+    const contentType = c.req.header("content-type") ?? "";
+    if (contentType.includes("form-urlencoded")) {
+      const params = new URLSearchParams(body);
+      payload = JSON.parse(params.get("payload") ?? "{}");
+    } else {
+      payload = JSON.parse(body);
+    }
+  } catch {
+    return c.json({ error: "invalid JSON payload" }, 400);
+  }
 
   logEvent("github", `${event}.${payload.action ?? ""}`, payload);
 
