@@ -1,6 +1,8 @@
 import { createServer } from "node:https";
 import { createServer as createHttpServer } from "node:http";
 import { readFileSync, existsSync } from "node:fs";
+import { resolve, dirname } from "node:path";
+import { fileURLToPath } from "node:url";
 
 /**
  * Resolve a TLS value: if it looks like a PEM string, use it directly.
@@ -14,6 +16,7 @@ function resolvePem(value: string): Buffer {
   return readFileSync(value);
 }
 import { serve } from "@hono/node-server";
+import { serveStatic } from "@hono/node-server/serve-static";
 import { Hono } from "hono";
 import { logger } from "hono/logger";
 import { githubWebhook } from "./routes/github.js";
@@ -28,10 +31,10 @@ const app = new Hono();
 
 app.use("*", logger());
 
-// Verify shared secret from CloudFront/Cloudflare on all /webhooks/* routes
+// Verify shared secret on all /api/webhooks/* routes
 const WEBHOOK_SECRET = process.env.WEBHOOK_SECRET;
 
-app.use("/webhooks/*", async (c, next) => {
+app.use("/api/webhooks/*", async (c, next) => {
   if (WEBHOOK_SECRET) {
     const header = c.req.header("x-webhook-secret");
     if (header !== WEBHOOK_SECRET) {
@@ -47,9 +50,20 @@ app.use("/webhooks/*", async (c, next) => {
 
 app.get("/health", (c) => c.json({ status: "ok" }));
 
-app.route("/webhooks/github", githubWebhook);
-app.route("/webhooks/hubspot", hubspotWebhook);
-app.route("/webhooks/krisp", krispWebhook);
+// Legacy webhook paths redirect to /api/webhooks/*
+app.all("/webhooks/*", (c) => {
+  const newPath = `/api${c.req.path}`;
+  return c.redirect(newPath, 308);
+});
+
+// Webhooks under /api/webhooks/
+app.route("/api/webhooks/github", githubWebhook);
+app.route("/api/webhooks/hubspot", hubspotWebhook);
+app.route("/api/webhooks/krisp", krispWebhook);
+
+// Serve static files from public/
+const __dirname = dirname(fileURLToPath(import.meta.url));
+app.use("/*", serveStatic({ root: resolve(__dirname, "..", "public") }));
 
 // ---------------------------------------------------------------------------
 // TLS Configuration
